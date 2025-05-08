@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.card-wrapper{
+  mask: url('../public/Union.svg');
+  -webkit-mask: url('../public/Union.svg'); 
+}
