@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
-.card-wrapper{
-  mask: url('../public/Union.svg');
-  -webkit-mask: url('../public/Union.svg'); 
+@font-face {
+  font-family: "Dongle";
+  src: url("./assets/Fonts/Dongle/Dongle-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Labora";
+  src: url("./assets/Fonts/Labora/Labora-Regular.ttf") format("truetype");
+}
+
+@theme{
+    --font-dongle: 'Dongle', sans-serif;
+    --font-logo: 'Labora', sans-serif;
 }
