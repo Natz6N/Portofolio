@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './Pages/Home'
+// import About from './Pages/About'
+import FAQ from './Pages/FAQ'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
-// import Loading from './Components/Loading'
 import './App.css'
 
 function App() {
@@ -10,10 +11,14 @@ function App() {
   return (
     <>
       <Router>
-        {/* <Loading /> */}
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          {/* <Route path="/about" element={<About />} /> */}
+          <Route path="/faq" element={<FAQ />} />
+          {/* <Route path="/contact" element={<Contact />} />
+          <Route path="/project" element={<Project />} />
+          <Route path="/blog" element={<Blog />} /> */}
         </Routes>
         <Footer />
       </Router>
@@ -21,4 +26,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

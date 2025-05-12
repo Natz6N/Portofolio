@@ -14,8 +14,8 @@ export default function Button({
   // Define variant styles
   const variants = {
     primary: outline 
-      ? "border border-blue-500 text-blue-500 hover:bg-blue-50" 
-      : "bg-blue-500 text-white hover:bg-blue-600",
+      ? "border border-indigo-500 text-indigo-500 hover:bg-indigo-50" 
+      : "bg-indigo-500 text-white hover:bg-indigo-600",
     secondary: outline 
       ? "border border-gray-500 text-gray-500 hover:bg-gray-50" 
       : "bg-gray-500 text-white hover:bg-gray-600",

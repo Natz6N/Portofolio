@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import Button from "./UI/button";
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -27,15 +27,19 @@ function Navbar() {
             <Link to="/about" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-300">
               About
             </Link>
-            <Link to="/services" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-300">
-              Services
+            <Link to="/faq" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-300">
+              FAQ
+            </Link>
+            <Link to="/contact" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-300">
+              Projects
+            </Link>
+            <Link to="/contact" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-300">
+              Resume
             </Link>
             <Link to="/contact" className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-300">
               Contact
             </Link>
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300">
-              Login
-            </button>
+            <Button variant="primary" size="sm">Hire Me</Button>
           </div>
 
           {/* Hamburger Icon */}
@@ -56,6 +60,9 @@ function Navbar() {
             </Link>
             <Link to="/about" className="block text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md hover:bg-gray-100 transition-colors duration-300" onClick={toggleMenu}>
               About
+            </Link>
+            <Link to="/faq" className="block text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md hover:bg-gray-100 transition-colors duration-300" onClick={toggleMenu}>
+              FAQ
             </Link>
             <Link to="/services" className="block text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md hover:bg-gray-100 transition-colors duration-300" onClick={toggleMenu}>
               Services
