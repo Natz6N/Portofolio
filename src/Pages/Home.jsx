@@ -279,8 +279,10 @@ export default function Home() {
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+  
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
-  const isDesktopTwo = useMediaQuery({ query: "(min-width: 1104px)" });
+  // const isDesktopTwo = useMediaQuery({ query: "(min-width: 1104px)" });
+  
   // Simulasi loading selesai setelah 2.5 detik untuk lebih cepat
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -292,299 +294,312 @@ export default function Home() {
   // Handle content animations after loading is complete
   useEffect(() => {
     if (isLoading) return; // Don't run animations while loading
+    
+    let ctx;
+    let masterTimeline;
 
-    // Create master timeline for coordinated entrance
-    const masterTimeline = gsap.timeline({
-      defaults: { ease: "power3.out" },
-    });
+    // Tunggu beberapa ms untuk memastikan DOM elements sudah di-render
+    const animationDelay = setTimeout(() => {
+      // Create master timeline for coordinated entrance
+      masterTimeline = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
 
-    const ctx = gsap.context(() => {
-      // First fade in the container
-      masterTimeline.fromTo(
-        containerRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.8, ease: "power2.inOut" }
-      );
+      ctx = gsap.context(() => {
+        // First fade in the container
+        masterTimeline.fromTo(
+          containerRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.8, ease: "power2.inOut" }
+        );
 
-      // Then handle text splitting and animation
-      if (headingRef.current) {
-        const splitText = new SplitType(headingRef.current, {
-          types: "words, chars",
-          tagName: "span",
-        });
+        // Then handle text splitting and animation
+        if (headingRef.current) {
+          const splitText = new SplitType(headingRef.current, {
+            types: "words, chars",
+            tagName: "span",
+          });
 
-        // Animate the split words with better timing
-        masterTimeline.from(
-          splitText.words,
+          // Animate the split words with better timing
+          masterTimeline.from(
+            splitText.words,
+            {
+              y: "120%",
+              opacity: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              stagger: 0.06,
+            },
+            "-=0.4"
+          ); // Overlap slightly with previous animation
+        }
+
+        // Animate the image spans
+        masterTimeline.fromTo(
+          ".img-span",
           {
-            y: "120%",
             opacity: 0,
+            scale: 0.6,
+            rotation: -5,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: 0.7,
+            ease: "back.out(1.7)",
+            stagger: 0.15,
+          },
+          "-=0.5" // Overlap with text animation
+        );
+
+        // Animate the button with a bounce effect
+        if (buttonRef.current && buttonRef.current.children) {
+          masterTimeline.fromTo(
+            buttonRef.current.children,
+            { y: 30, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              ease: "back.out(1.7)",
+              stagger: 0.1,
+            },
+            "-=0.2"
+          );
+        }
+
+        // Animate cards with staggered entrance
+        masterTimeline.fromTo(
+          ".card-img",
+          {
+            opacity: 0,
+            y: 80,
+            rotation: -2,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotation: 0,
+            scale: 1,
             duration: 0.8,
             ease: "power2.out",
-            stagger: 0.06,
+            stagger: 0.2,
           },
-          "-=0.4"
-        ); // Overlap slightly with previous animation
-      }
+          "-=0.3"
+        );
 
-      // Animate the image spans
-      masterTimeline.fromTo(
-        ".img-span",
-        {
-          opacity: 0,
-          scale: 0.6,
-          rotation: -5,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 0.7,
-          ease: "back.out(1.7)",
-          stagger: 0.15,
-        },
-        "-=0.5" // Overlap with text animation
-      );
+        // Set up scroll animations for about section
+        if (aboutSectionRef.current) {
+          ScrollTrigger.create({
+            trigger: aboutSectionRef.current,
+            start: "top 80%",
+            onEnter: () => {
+              gsap.fromTo(
+                aboutSectionRef.current.children,
+                {
+                  y: 50,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  stagger: 0.15,
+                  ease: "power2.out",
+                }
+              );
+            },
+            once: true,
+          });
+        }
 
-      // Animate the button with a bounce effect
-      masterTimeline.fromTo(
-        buttonRef.current.children,
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: "back.out(1.7)",
-          stagger: 0.1,
-        },
-        "-=0.2"
-      );
+        // Set up scroll animations for project section
+        if (projectSectionRef.current) {
+          ScrollTrigger.create({
+            trigger: projectSectionRef.current,
+            start: "top 75%",
+            onEnter: () => {
+              gsap.fromTo(
+                projectSectionRef.current.querySelector("h1"),
+                {
+                  x: -100,
+                  opacity: 0,
+                },
+                {
+                  x: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: "power2.out",
+                }
+              );
 
-      // Animate cards with staggered entrance
-      masterTimeline.fromTo(
-        ".card-img",
-        {
-          opacity: 0,
-          y: 80,
-          rotation: -2,
-          scale: 0.9,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          rotation: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: "power2.out",
-          stagger: 0.2,
-        },
-        "-=0.3"
-      );
+              gsap.fromTo(
+                projectSectionRef.current.querySelector("p"),
+                {
+                  x: 100,
+                  opacity: 0,
+                },
+                {
+                  x: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: "power2.out",
+                  delay: 0.2,
+                }
+              );
 
-      // Set up scroll animations for about section
-      if (aboutSectionRef.current) {
-        ScrollTrigger.create({
-          trigger: aboutSectionRef.current,
-          start: "top 80%",
-          onEnter: () => {
-            gsap.fromTo(
-              aboutSectionRef.current.children,
-              {
-                y: 50,
-                opacity: 0,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.15,
-                ease: "power2.out",
-              }
-            );
-          },
-          once: true,
-        });
-      }
+              gsap.fromTo(
+                projectSectionRef.current.querySelectorAll(".swiper-container"),
+                {
+                  y: 50,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 1,
+                  stagger: 0.3,
+                  ease: "power2.out",
+                  delay: 0.4,
+                }
+              );
+            },
+            once: true,
+          });
+        }
 
-      // Set up scroll animations for project section
-      if (projectSectionRef.current) {
-        ScrollTrigger.create({
-          trigger: projectSectionRef.current,
-          start: "top 75%",
-          onEnter: () => {
-            gsap.fromTo(
-              projectSectionRef.current.querySelector("h1"),
-              {
-                x: -100,
-                opacity: 0,
-              },
-              {
-                x: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power2.out",
-              }
-            );
+        // Set up scroll animations for FAQ section
+        if (faqSectionRef.current) {
+          ScrollTrigger.create({
+            trigger: faqSectionRef.current,
+            start: "top 80%",
+            onEnter: () => {
+              gsap.fromTo(
+                faqSectionRef.current.querySelector(".text-center"),
+                {
+                  y: 50,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: "power2.out",
+                }
+              );
 
-            gsap.fromTo(
-              projectSectionRef.current.querySelector("p"),
-              {
-                x: 100,
-                opacity: 0,
-              },
-              {
-                x: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power2.out",
-                delay: 0.2,
-              }
-            );
+              gsap.fromTo(
+                faqSectionRef.current.querySelectorAll(".border-b"),
+                {
+                  y: 30,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.5,
+                  stagger: 0.1,
+                  ease: "power1.out",
+                  delay: 0.3,
+                }
+              );
+            },
+            once: true,
+          });
+        }
 
-            gsap.fromTo(
-              projectSectionRef.current.querySelectorAll(".swiper-container"),
-              {
-                y: 50,
-                opacity: 0,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 1,
-                stagger: 0.3,
-                ease: "power2.out",
-                delay: 0.4,
-              }
-            );
-          },
-          once: true,
-        });
-      }
+        // Set up scroll animations for contact section
+        if (contactSectionRef.current) {
+          ScrollTrigger.create({
+            trigger: contactSectionRef.current,
+            start: "top 85%",
+            onEnter: () => {
+              gsap.fromTo(
+                contactSectionRef.current.querySelector(".container"),
+                {
+                  scale: 0.9,
+                  opacity: 0,
+                },
+                {
+                  scale: 1,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: "back.out(1.2)",
+                }
+              );
 
-      // Set up scroll animations for FAQ section
-      if (faqSectionRef.current) {
-        ScrollTrigger.create({
-          trigger: faqSectionRef.current,
-          start: "top 80%",
-          onEnter: () => {
-            gsap.fromTo(
-              faqSectionRef.current.querySelector(".text-center"),
-              {
-                y: 50,
-                opacity: 0,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: "power2.out",
-              }
-            );
+              gsap.fromTo(
+                contactSectionRef.current.querySelector("h1"),
+                {
+                  y: -30,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: "power2.out", 
+                  delay: 0.3,
+                }
+              );
 
-            gsap.fromTo(
-              faqSectionRef.current.querySelectorAll(".border-b"),
-              {
-                y: 30,
-                opacity: 0,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.5,
-                stagger: 0.1,
-                ease: "power1.out",
-                delay: 0.3,
-              }
-            );
-          },
-          once: true,
-        });
-      }
+              gsap.fromTo(
+                contactSectionRef.current.querySelector("p"),
+                {
+                  y: 30,
+                  opacity: 0,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: "power2.out",
+                  delay: 0.5,
+                }
+              );
 
-      // Set up scroll animations for contact section
-      if (contactSectionRef.current) {
-        ScrollTrigger.create({
-          trigger: contactSectionRef.current,
-          start: "top 85%",
-          onEnter: () => {
-            gsap.fromTo(
-              contactSectionRef.current.querySelector(".container"),
-              {
-                scale: 0.9,
-                opacity: 0,
-              },
-              {
-                scale: 1,
-                opacity: 1,
-                duration: 0.8,
-                ease: "back.out(1.2)",
-              }
-            );
+              gsap.fromTo(
+                contactSectionRef.current.querySelector("button"),
+                {
+                  y: 20,
+                  opacity: 0,
+                  scale: 0.8,
+                },
+                {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.5,
+                  ease: "back.out(1.7)",
+                  delay: 0.7,
+                }
+              );
+            },
+            once: true,
+          });
+        }
+      }, containerRef);
+    }, 100); // Berikan sedikit delay untuk memastikan DOM sudah siap
 
-            gsap.fromTo(
-              contactSectionRef.current.querySelector("h1"),
-              {
-                y: -30,
-                opacity: 0,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power2.out",
-                delay: 0.3,
-              }
-            );
-
-            gsap.fromTo(
-              contactSectionRef.current.querySelector("p"),
-              {
-                y: 30,
-                opacity: 0,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power2.out",
-                delay: 0.5,
-              }
-            );
-
-            gsap.fromTo(
-              contactSectionRef.current.querySelector("button"),
-              {
-                y: 20,
-                opacity: 0,
-                scale: 0.8,
-              },
-              {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                ease: "back.out(1.7)",
-                delay: 0.7,
-              }
-            );
-          },
-          once: true,
-        });
-      }
-    }, containerRef);
-
-    return () => ctx.revert();
+    return () => {
+      clearTimeout(animationDelay);
+      if (ctx) ctx.revert();
+      if (masterTimeline) masterTimeline.kill();
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    };
   }, [isLoading]); // Dependency on isLoading ensures this runs after loading completes
 
   return (
-    <div
-      ref={containerRef}
-      className={isLoading ? "opacity-0" : "transition-opacity duration-500"}
-    >
+    <div className="w-full h-full">
       {isLoading ? (
         <Loading />
       ) : (
-        <>
+        <div
+          ref={containerRef}
+          className="transition-opacity duration-500"
+        >
           <div className="container mx-auto min-h-screen flex items-center justify-center bg-white">
             <div className="flex flex-col md:flex-row items-center justify-center w-full px-4 md:px-0">
               {/* Kiri: Teks dan tombol */}
@@ -644,7 +659,7 @@ export default function Home() {
           </div>
 
           <div className="relative container mt-16 sm:mt-[20px] mx-auto py-8 sm:py-[10px] px-4">
-            {isDesktopTwo && (
+            {isDesktop && (
               <div className="absolute gap-6 right-0 -top-[100px] sm:-top-[300px] flex items-center justify-center gap-4">
                 <div className="relative top-[80px] sm:top-[120px] card-img w-[150px] sm:w-[200px] h-[250px] sm:h-[300px] min-h-[250px] sm:min-h-[300px] min-w-[150px] sm:min-w-[200px] rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-300">
                   <img
@@ -945,7 +960,7 @@ export default function Home() {
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
