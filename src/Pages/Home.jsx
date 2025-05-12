@@ -735,7 +735,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col items-center justify-center px-4 py-16 bg-white overflow-hidden">
+          <div ref={projectSectionRef} className="w-full flex flex-col items-center justify-center px-4 py-16 bg-white overflow-hidden">
             <div className="flex items-center justify-between container mx-auto w-full">
               <h1 className="text-[5rem] font-dongle font-bold">PROJECT</h1>
               <p className="text-gray-400 uppercase tracking-widest text-sm mb-2 max-w-[500px] text-end">
@@ -856,7 +856,7 @@ export default function Home() {
               </Swiper>
             </div>
           </div>
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div ref={faqSectionRef} className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
             <div className="text-center mb-16">
               <div className="text-sm text-blue-600 font-semibold uppercase tracking-wide mb-2">
                 FAQ
@@ -926,7 +926,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="flex items-center justify-center mt-16">
+          <div ref={contactSectionRef} className="flex items-center justify-center mt-16">
             <div className="container flex items-center justify-center min-h-[400px] bg-gray-900 rounded-[40px] flex-col">
               <h1 className="text-4xl font-bold text-white leading-tight mb-4">
                 Mari Berkolaborasi
